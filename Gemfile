@@ -54,6 +54,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Code quality analysis — target A/B for all files before committing
+  gem "rubycritic", require: false
 end
 
 group :development do

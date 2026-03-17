@@ -3,7 +3,8 @@
 module Components
   class Nav < ApplicationComponent
     NAV_ITEMS = [
-      { label: "Tasks", path: "/" }
+      { label: "Tasks",  path: "/" },
+      { label: "Agents", path: "/agents" }
     ].freeze
 
     def initialize(current_path:)

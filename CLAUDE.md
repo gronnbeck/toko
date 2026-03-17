@@ -32,6 +32,8 @@ bin/rails db:seed:replant   # Reset and re-seed (also run in CI)
 
 Red-Green-Commit cycle: write a failing test → implement → make it pass → commit. Each cycle produces its own commit; many small commits is the goal.
 
+Before every commit, run `rubycritic` on the files changed in that commit. The goal is an A or B rating for every file, including tests. Fix any C/D/F rated files before committing.
+
 ## Code Conventions
 
 - Files and test files: ~120 lines max

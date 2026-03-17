@@ -6,3 +6,11 @@
 ].each do |attrs|
   Task.find_or_create_by!(title: attrs[:title]) { |t| t.status = attrs[:status] }
 end
+
+[
+  { name: "Alpha",   status: :idle },
+  { name: "Bravo",   status: :busy },
+  { name: "Charlie", status: :offline }
+].each do |attrs|
+  Agent.find_or_create_by!(name: attrs[:name]) { |a| a.status = attrs[:status] }
+end

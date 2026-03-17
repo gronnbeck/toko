@@ -25,4 +25,16 @@
   /* Status: failed */
   --color-failed-bg:   #fee2e2;
   --color-failed-text: #b91c1c;
+
+  /* Status: idle */
+  --color-idle-bg:   #f3f4f6;
+  --color-idle-text: #374151;
+
+  /* Status: busy */
+  --color-busy-bg:   #fef9c3;
+  --color-busy-text: #854d0e;
+
+  /* Status: offline */
+  --color-offline-bg:   #f3f4f6;
+  --color-offline-text: #9ca3af;
 }
