@@ -2,6 +2,7 @@
 
 class HomeController < ApplicationController
   def index
-    render ::Views::Home::Index.new
+    tasks = Task.order(created_at: :desc)
+    render ::Views::Home::Index.new(tasks:)
   end
 end
