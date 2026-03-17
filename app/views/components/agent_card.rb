@@ -7,7 +7,7 @@ module Components
     end
 
     def view_template
-      div(class: "agent-card") do
+      a(href: "/agents/#{@agent.id}", class: "agent-card") do
         span(class: "agent-card__name") { @agent.name }
         span(class: "status-pill status-pill--#{@agent.status}") { @agent.status }
       end

@@ -6,6 +6,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.agent-card:hover {
+  background: var(--color-surface);
 }
 
 .agent-card__name {
@@ -15,3 +21,82 @@
 .status-pill--idle    { background: var(--color-idle-bg);    color: var(--color-idle-text); }
 .status-pill--busy    { background: var(--color-busy-bg);    color: var(--color-busy-text); }
 .status-pill--offline { background: var(--color-offline-bg); color: var(--color-offline-text); }
+
+/* Show page */
+.agent-show__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.agent-show__back {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.agent-show__back:hover {
+  color: var(--color-text);
+}
+
+/* Form */
+.agent-form {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.agent-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.agent-form__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-subtle);
+}
+
+.agent-form__input {
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.agent-form__input:focus {
+  outline: none;
+  border-color: #6b7280;
+}
+
+.agent-form__textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.agent-form__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.agent-form__btn {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  background: var(--color-text);
+  color: var(--color-bg);
+  cursor: pointer;
+}
+
+.agent-form__btn:hover {
+  opacity: 0.85;
+}
