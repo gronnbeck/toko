@@ -10,21 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_190603) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_190809) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
     t.string "name", null: false
+    t.integer "organization_id"
     t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_agents_on_organization_id"
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "prompts", force: :cascade do |t|
-    t.integer "agent_id", null: false
     t.text "body", null: false
     t.datetime "created_at", null: false
+    t.integer "kind", default: 0, null: false
+    t.integer "promptable_id", null: false
+    t.string "promptable_type", null: false
     t.datetime "updated_at", null: false
-    t.index ["agent_id"], name: "index_prompts_on_agent_id"
+    t.index ["promptable_type", "promptable_id"], name: "index_prompts_on_promptable"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -34,5 +44,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_190603) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "prompts", "agents"
+  add_foreign_key "agents", "organizations"
 end

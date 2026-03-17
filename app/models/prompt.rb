@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Prompt < ApplicationRecord
-  belongs_to :agent
+  enum :kind, { mission: 0, policy: 1 }
+
+  belongs_to :promptable, polymorphic: true
 
   validates :body, presence: true
 end

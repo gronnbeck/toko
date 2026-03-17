@@ -22,17 +22,23 @@ class AgentTest < ActiveSupport::TestCase
     assert Agent.statuses.keys == %w[idle busy offline]
   end
 
-  test "has one mission" do
+  test "has one mission prompt" do
     agent = Agent.create!(name: "Agent 1")
-    mission = Prompt.create!(body: "You are a helpful agent.", agent: agent)
+    mission = Prompt.create!(body: "You are a helpful agent.", promptable: agent, kind: :mission)
     assert_equal mission, agent.mission
   end
 
   test "mission is destroyed with agent" do
     agent = Agent.create!(name: "Agent 1")
-    Prompt.create!(body: "You are a helpful agent.", agent: agent)
+    Prompt.create!(body: "You are a helpful agent.", promptable: agent, kind: :mission)
     assert_difference "Prompt.count", -1 do
       agent.destroy
     end
+  end
+
+  test "belongs to an organization" do
+    org = Organization.create!(name: "Acme")
+    agent = Agent.create!(name: "Alpha", organization: org)
+    assert_equal org, agent.organization
   end
 end
