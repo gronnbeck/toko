@@ -96,6 +96,8 @@ Harness source lives in `harness/lib/harness/`:
 
 **Solid suite replaces external services**: Solid Queue (background jobs), Solid Cache (Rails.cache), and Solid Cable (Action Cable) all use SQLite — no Redis or external queue broker needed in development or production.
 
+**UI components**: All UI is written with [Phlex](https://www.phlex.fun) (`phlex-rails`). No ERB views except layouts. Components live in `app/views/` as Ruby classes inheriting from `ApplicationView` (pages) or `ApplicationComponent` (partials). Render them from controllers with `render MyView.new(...)`.
+
 **Asset pipeline**: Propshaft (not Sprockets) + importmap-rails for JavaScript (no bundler/transpilation). Stimulus for JS interactivity, Turbo for SPA-like navigation.
 
 **Deployment**: Kamal 2 with Docker. `config/deploy.yml` targets a single server with a local Docker registry. Production uses a persistent Docker volume (`toko_storage`) for SQLite files and Active Storage. Solid Queue runs inside Puma (single-server mode via `SOLID_QUEUE_IN_PUMA=true`).
