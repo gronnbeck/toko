@@ -3,28 +3,46 @@
 module Api
   module V1
     class TasksController < Api::BaseController
-      # GET /api/v1/tasks?status=pending
+      before_action :set_task, only: [ :claim, :complete, :fail ]
+      before_action :set_agent, only: [ :claim, :complete, :fail ]
+
       def index
-        # TODO: implement
-        render json: { tasks: [] }
+        tasks = Task.where(status: :pending).order(created_at: :asc)
+        render json: { tasks: tasks.map { |t| serialize(t) } }
       end
 
-      # POST /api/v1/tasks/:id/claim
       def claim
-        # TODO: implement
-        render json: { status: "claimed" }
+        if @task.pending?
+          @task.update!(status: :in_progress, claimed_by: @agent)
+          render json: { status: "claimed", task: serialize(@task) }
+        else
+          render json: { error: "Task already claimed" }, status: :conflict
+        end
       end
 
-      # POST /api/v1/tasks/:id/complete
       def complete
-        # TODO: implement
+        @task.update!(status: :completed)
         render json: { status: "completed" }
       end
 
-      # POST /api/v1/tasks/:id/fail
       def fail
-        # TODO: implement
+        @task.update!(status: :failed)
         render json: { status: "failed" }
+      end
+
+      private
+
+      def set_task
+        @task = Task.find(params[:id])
+      end
+
+      def set_agent
+        token = params[:agent_token]
+        @agent = Agent.find_by!(token:)
+      end
+
+      def serialize(task)
+        { id: task.id, title: task.title, status: task.status }
       end
     end
   end

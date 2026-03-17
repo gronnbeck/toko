@@ -19,16 +19,16 @@ module Harness
       get("/api/v1/tasks?status=pending")
     end
 
-    def claim_task(task_id)
-      post("/api/v1/tasks/#{task_id}/claim", {})
+    def claim_task(task_id, agent_token:)
+      post("/api/v1/tasks/#{task_id}/claim", { agent_token: })
     end
 
-    def complete_task(task_id, output:)
-      post("/api/v1/tasks/#{task_id}/complete", { output: })
+    def complete_task(task_id, output:, agent_token:)
+      post("/api/v1/tasks/#{task_id}/complete", { output:, agent_token: })
     end
 
-    def fail_task(task_id, error:)
-      post("/api/v1/tasks/#{task_id}/fail", { error: })
+    def fail_task(task_id, error:, agent_token:)
+      post("/api/v1/tasks/#{task_id}/fail", { error:, agent_token: })
     end
 
     private

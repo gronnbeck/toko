@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_191112) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_192543) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -41,11 +41,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_191112) do
   end
 
   create_table "tasks", force: :cascade do |t|
+    t.integer "claimed_by_id"
     t.datetime "created_at", null: false
     t.integer "status", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
+    t.index ["claimed_by_id"], name: "index_tasks_on_claimed_by_id"
   end
 
   add_foreign_key "agents", "organizations"
+  add_foreign_key "tasks", "agents", column: "claimed_by_id"
 end

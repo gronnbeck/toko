@@ -10,7 +10,7 @@ module Harness
     def initialize(config)
       @config = config
       @client = ServerClient.new(config)
-      @running_agents = []
+      @threads = []
     end
 
     def run
@@ -24,22 +24,25 @@ module Harness
 
     private
 
-    attr_reader :config, :client, :running_agents
+    attr_reader :config, :client, :threads
 
     def poll_and_dispatch
       return if at_capacity?
 
       tasks = client.fetch_pending_tasks.fetch(:tasks, [])
-      tasks.take(available_slots).each { |task| dispatch(task) }
+      tasks.take(available_slots).each do |task|
+        token = config.agent_tokens.first
+        dispatch(task, token:)
+      end
     end
 
-    def dispatch(task)
-      thread = Thread.new { AgentRunner.run(task:, client:) }
-      running_agents << thread
-      running_agents.select!(&:alive?)
+    def dispatch(task, token:)
+      thread = Thread.new { AgentRunner.run(task:, client:, token:) }
+      threads << thread
+      threads.select!(&:alive?)
     end
 
-    def at_capacity? = running_agents.count(&:alive?) >= config.max_concurrent_agents
-    def available_slots = config.max_concurrent_agents - running_agents.count(&:alive?)
+    def at_capacity? = threads.count(&:alive?) >= config.max_concurrent_agents
+    def available_slots = config.max_concurrent_agents - threads.count(&:alive?)
   end
 end
