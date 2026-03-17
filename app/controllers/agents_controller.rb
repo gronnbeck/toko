@@ -13,7 +13,7 @@ class AgentsController < ApplicationController
   end
 
   def update
-    if @agent.update(agent_params)
+    if Agents::Update.call(agent: @agent, params: agent_params)
       redirect_to agent_path(@agent)
     else
       render ::Views::Agents::Show.new(agent: @agent), status: :unprocessable_entity
@@ -27,6 +27,6 @@ class AgentsController < ApplicationController
   end
 
   def agent_params
-    params.require(:agent).permit(:name, :description, :status)
+    params.require(:agent).permit(:name, :description, :mission_body)
   end
 end

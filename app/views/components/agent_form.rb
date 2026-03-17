@@ -25,6 +25,12 @@ module Components
           end
         end
 
+        field("Mission") do
+          textarea(name: "agent[mission_body]", class: "agent-form__input agent-form__textarea") do
+            @agent.mission&.body.to_s
+          end
+        end
+
         div(class: "agent-form__actions") do
           button(type: "submit", class: "agent-form__btn") { "Save" }
         end
