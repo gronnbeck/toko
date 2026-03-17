@@ -2,6 +2,10 @@ server_url: http://localhost:3360
 api_key: your-api-key-here
 
 poll_interval_seconds: 5
+ping_interval_seconds: 30
 
 agents:
   max_concurrent: 3
+  tokens:
+    - replace-with-agent-uuid
+    - replace-with-agent-uuid

@@ -13,6 +13,10 @@ Rails.application.routes.draw do
           post :fail
         end
       end
+
+      resources :agents, param: :token, only: [] do
+        resource :ping, only: [ :create ]
+      end
     end
   end
 end

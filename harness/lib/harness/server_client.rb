@@ -11,6 +11,10 @@ module Harness
       @api_key = config.api_key
     end
 
+    def ping_agent(token, status: "online")
+      post("/api/v1/agents/#{token}/ping", { status: })
+    end
+
     def fetch_pending_tasks
       get("/api/v1/tasks?status=pending")
     end

@@ -12,7 +12,7 @@ module Views
           header(class: "agent-show__header") do
             a(href: "/agents", class: "agent-show__back") { "← Agents" }
             h1(class: "home__title") { @agent.name }
-            span(class: "status-pill status-pill--#{@agent.status}") { @agent.status }
+            span(class: "status-pill status-pill--#{@agent.display_status}") { @agent.display_status.to_s }
           end
 
           render ::Components::AgentForm.new(agent: @agent)

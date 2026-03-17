@@ -14,6 +14,8 @@ module Harness
     end
 
     def run
+      Heartbeat.start(config:, client:)
+
       loop do
         poll_and_dispatch
         sleep config.poll_interval_seconds

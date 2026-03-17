@@ -18,8 +18,9 @@
   font-weight: 500;
 }
 
-.status-pill--idle    { background: var(--color-idle-bg);    color: var(--color-idle-text); }
+.status-pill--online  { background: var(--color-online-bg);  color: var(--color-online-text); }
 .status-pill--busy    { background: var(--color-busy-bg);    color: var(--color-busy-text); }
+.status-pill--missing { background: var(--color-missing-bg); color: var(--color-missing-text); }
 .status-pill--offline { background: var(--color-offline-bg); color: var(--color-offline-text); }
 
 /* Show page */
@@ -73,6 +74,12 @@
 .agent-form__input:focus {
   outline: none;
   border-color: #6b7280;
+}
+
+.agent-form__input--readonly {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: default;
 }
 
 .agent-form__textarea {

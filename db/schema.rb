@@ -10,15 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_190809) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_191112) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
+    t.datetime "last_seen_at"
     t.string "name", null: false
     t.integer "organization_id"
-    t.integer "status", default: 0, null: false
+    t.integer "status", default: 3, null: false
+    t.string "token", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_agents_on_organization_id"
+    t.index ["token"], name: "index_agents_on_token", unique: true
   end
 
   create_table "organizations", force: :cascade do |t|

@@ -4,7 +4,7 @@ require "test_helper"
 
 class AgentsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @agent = Agent.create!(name: "Alpha", status: :idle, description: "Does stuff")
+    @agent = Agent.create!(name: "Alpha", description: "Does stuff")
   end
 
   test "GET show renders successfully" do

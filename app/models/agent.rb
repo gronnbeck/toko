@@ -1,10 +1,28 @@
 # frozen_string_literal: true
 
 class Agent < ApplicationRecord
-  enum :status, { idle: 0, busy: 1, offline: 2 }
+  enum :status, { online: 0, busy: 1, missing: 2, offline: 3 }
 
   belongs_to :organization, optional: true
   has_one :mission, -> { where(kind: :mission) }, class_name: "Prompt", as: :promptable, dependent: :destroy
 
   validates :name, presence: true
+
+  before_create :assign_token
+
+  def display_status
+    return :offline if last_seen_at.nil? || last_seen_at < 10.minutes.ago
+    return :missing if last_seen_at < 5.minutes.ago
+    status.to_sym
+  end
+
+  def ping!(status:)
+    update!(last_seen_at: Time.current, status:)
+  end
+
+  private
+
+  def assign_token
+    self.token ||= SecureRandom.uuid
+  end
 end

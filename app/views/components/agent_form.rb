@@ -11,23 +11,12 @@ module Components
         input name: "_method", type: "hidden", value: "patch"
         input name: authenticity_token_field, type: "hidden", value: helpers.form_authenticity_token
 
-        field("Name") do
-          input(
-            type: "text", name: "agent[name]",
-            value: @agent.name, class: "agent-form__input"
-          )
+        field("Token") do
+          input(type: "text", value: @agent.token, class: "agent-form__input agent-form__input--readonly", readonly: true)
         end
 
-        field("Status") do
-          select(name: "agent[status]", class: "agent-form__input") do
-            Agent.statuses.each_key do |s|
-              if s == @agent.status
-                option(value: s, selected: true) { s }
-              else
-                option(value: s) { s }
-              end
-            end
-          end
+        field("Name") do
+          input(type: "text", name: "agent[name]", value: @agent.name, class: "agent-form__input")
         end
 
         field("Description") do
