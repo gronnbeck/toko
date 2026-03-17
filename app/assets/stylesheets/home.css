@@ -1,0 +1,13 @@
+.home {
+  margin: 40px auto;
+  padding: 0 32px;
+  font-family: sans-serif;
+}
+
+.home__title {
+  margin-bottom: 24px;
+}
+
+.home__empty {
+  color: #6b7280;
+}

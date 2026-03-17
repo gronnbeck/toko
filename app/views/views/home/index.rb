@@ -8,14 +8,14 @@ module Views
       end
 
       def view_template
-        div(style: "max-width:640px;margin:40px auto;padding:0 16px;font-family:sans-serif") do
-          h1(style: "margin-bottom:24px") { "Welcome to Toko" }
+        div(class: "home") do
+          h1(class: "home__title") { "Welcome to Toko" }
           if @tasks.any?
-            div(style: "display:flex;flex-direction:column;gap:12px") do
+            div(class: "task-grid") do
               @tasks.each { |task| render ::Components::TaskCard.new(task:) }
             end
           else
-            p(style: "color:#6b7280") { "No tasks yet." }
+            p(class: "home__empty") { "No tasks yet." }
           end
         end
       end
