@@ -12,9 +12,13 @@ module Harness
       new(raw)
     end
 
+    def self.from_env(url:, token:)
+      new(server_url: url, api_key: nil, agents: { tokens: [ token ] })
+    end
+
     def initialize(raw)
       @server_url = raw.fetch(:server_url)
-      @api_key = raw.fetch(:api_key)
+      @api_key = raw[:api_key]
       @poll_interval_seconds = raw.fetch(:poll_interval_seconds, 5)
       @ping_interval_seconds = raw.fetch(:ping_interval_seconds, 30)
       @max_concurrent_agents = raw.dig(:agents, :max_concurrent) || 1

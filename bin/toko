@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path("../harness/lib", __dir__)
+require "harness"
+
+url   = ENV.fetch("TOKO_URL") { abort "TOKO_URL is not set" }
+token = ENV.fetch("TOKO_AGENT_TOKEN") { abort "TOKO_AGENT_TOKEN is not set" }
+
+config = Harness::Config.from_env(url:, token:)
+client = Harness::ServerClient.new(config)
+cli    = Harness::CLI.new(client:, token:)
+
+cli.run(ARGV)

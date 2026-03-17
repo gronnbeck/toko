@@ -84,8 +84,15 @@ The harness gateway is intentionally decoupled from the server — it only knows
 
 **Running the harness gateway:**
 ```bash
-cp harness/config.example.yml harness/config.yml  # fill in server_url and api_key
-bin/harness harness/config.yml
+bin/harness harness/settings.yml   # uses gitignored settings.yml with local agent tokens
+```
+
+**toko CLI** — talks to the server on behalf of an agent, configured via env vars:
+```bash
+TOKO_URL=http://localhost:3360 TOKO_AGENT_TOKEN=<uuid> bin/toko tasks list
+TOKO_URL=http://localhost:3360 TOKO_AGENT_TOKEN=<uuid> bin/toko tasks claim <id>
+TOKO_URL=http://localhost:3360 TOKO_AGENT_TOKEN=<uuid> bin/toko tasks complete <id>
+TOKO_URL=http://localhost:3360 TOKO_AGENT_TOKEN=<uuid> bin/toko tasks fail <id>
 ```
 
 Harness source lives in `harness/lib/harness/`:
