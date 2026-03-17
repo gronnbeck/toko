@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class PingsController < ApplicationController
+    class PingsController < Api::BaseController
       def create
         agent = Agent.find_by(token: params[:agent_token])
         return render json: { error: "Agent not found" }, status: :not_found unless agent

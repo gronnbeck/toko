@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class TasksController < ApplicationController
+    class TasksController < Api::BaseController
       # GET /api/v1/tasks?status=pending
       def index
         # TODO: implement
