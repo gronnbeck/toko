@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path("../harness/lib", __dir__)
+require "harness"
+
+config_path = ARGV[0] || "harness/config.yml"
+
+unless File.exist?(config_path)
+  warn "Config file not found: #{config_path}"
+  warn "Copy harness/config.example.yml to #{config_path} and fill in the values."
+  exit 1
+end
+
+Harness::Gateway.start(config_path:)
