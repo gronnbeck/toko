@@ -24,6 +24,11 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="app-layout">
+      <%= render ::Components::Nav.new(current_path: request.path) %>
+      <main class="app-main">
+        <%= yield %>
+      </main>
+    </div>
   </body>
 </html>

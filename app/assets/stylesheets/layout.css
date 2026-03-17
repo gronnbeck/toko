@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.nav {
+  width: 220px;
+  flex-shrink: 0;
+  background: #111827;
+  color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+}
+
+.nav__brand {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 0 20px 24px;
+  border-bottom: 1px solid #1f2937;
+  margin-bottom: 16px;
+  color: #f9fafb;
+  text-decoration: none;
+}
+
+.nav__item {
+  display: block;
+  padding: 10px 20px;
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.nav__item:hover,
+.nav__item--active {
+  background: #1f2937;
+  color: #f9fafb;
+}
+
+.app-main {
+  flex: 1;
+  overflow: auto;
+}
