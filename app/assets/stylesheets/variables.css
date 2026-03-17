@@ -1,0 +1,28 @@
+:root {
+  /* Surface */
+  --color-bg:           #ffffff;
+  --color-surface:      #f3f4f6;
+  --color-surface-hover: #e5e7eb;
+  --color-border:       #e5e7eb;
+
+  /* Text */
+  --color-text:         #111827;
+  --color-text-muted:   #6b7280;
+  --color-text-subtle:  #374151;
+
+  /* Status: pending */
+  --color-pending-bg:   #e5e7eb;
+  --color-pending-text: #374151;
+
+  /* Status: in progress */
+  --color-in-progress-bg:   #dbeafe;
+  --color-in-progress-text: #1d4ed8;
+
+  /* Status: completed */
+  --color-completed-bg:   #dcfce7;
+  --color-completed-text: #15803d;
+
+  /* Status: failed */
+  --color-failed-bg:   #fee2e2;
+  --color-failed-text: #b91c1c;
+}
