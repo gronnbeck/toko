@@ -107,3 +107,9 @@
 .agent-form__btn:hover {
   opacity: 0.85;
 }
+
+/* Organization card */
+.org-card__agents {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}

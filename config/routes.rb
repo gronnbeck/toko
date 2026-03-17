@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   root "home#index"
   resources :agents, only: [ :index, :show, :update ]
+  resources :organizations, only: [ :index, :show, :update ]
 
   namespace :api do
     namespace :v1 do
