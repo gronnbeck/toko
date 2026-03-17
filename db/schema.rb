@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_190425) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_17_190603) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -19,10 +19,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_190425) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "prompts", force: :cascade do |t|
+    t.integer "agent_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_prompts_on_agent_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "status", default: 0, null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "prompts", "agents"
 end
