@@ -2,14 +2,15 @@
 
 module Harness
   class AgentRunner
-    def self.run(task:, client:, token:)
-      new(task:, client:, token:).run
+    def self.run(task:, client:, token:, executor: Executor)
+      new(task:, client:, token:, executor:).run
     end
 
-    def initialize(task:, client:, token:)
-      @task   = task
-      @client = client
-      @token  = token
+    def initialize(task:, client:, token:, executor: Executor)
+      @task     = task
+      @client   = client
+      @token    = token
+      @executor = executor
     end
 
     def run
@@ -35,14 +36,18 @@ module Harness
 
     private
 
-    attr_reader :task, :client, :token
+    attr_reader :task, :client, :token, :executor
 
     def task_id = task.fetch(:id)
 
     def execute(task, system_prompt:)
-      # TODO: spawn the actual agent process with system_prompt
-      log "Execution not yet implemented"
-      nil
+      log "Executing task #{task_id}"
+      executor.call(
+        task:,
+        system_prompt:,
+        server_url: client.base_url,
+        agent_token: token
+      )
     end
 
     def report_cost(cost_cents)

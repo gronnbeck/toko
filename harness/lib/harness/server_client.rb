@@ -6,6 +6,8 @@ require "uri"
 
 module Harness
   class ServerClient
+    attr_reader :base_url
+
     def initialize(config)
       @base_url = config.server_url
       @api_key = config.api_key
