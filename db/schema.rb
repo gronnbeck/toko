@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_114654) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_114747) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "daily_budget_cents"
@@ -85,6 +85,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114654) do
 
   create_table "tasks", force: :cascade do |t|
     t.integer "claimed_by_id"
+    t.integer "cost_cents"
+    t.datetime "cost_deducted_at"
     t.datetime "created_at", null: false
     t.integer "goal_id"
     t.integer "status", default: 0, null: false

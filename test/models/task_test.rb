@@ -33,4 +33,14 @@ class TaskTest < ActiveSupport::TestCase
     task = Task.new(title: "Fix bug")
     assert task.valid?
   end
+
+  test "cost_cents is nil by default" do
+    task = Task.create!(title: "Fix bug")
+    assert_nil task.cost_cents
+  end
+
+  test "cost_deducted_at is nil by default" do
+    task = Task.create!(title: "Fix bug")
+    assert_nil task.cost_deducted_at
+  end
 end
