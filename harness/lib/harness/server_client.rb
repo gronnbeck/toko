@@ -21,6 +21,10 @@ module Harness
       get(path)
     end
 
+    def create_task(goal_id, title:, description: nil, agent_token:)
+      post("/api/v1/tasks", { agent_token:, goal_id:, title:, description: })
+    end
+
     def claim_task(task_id, agent_token:)
       post("/api/v1/tasks/#{task_id}/claim", { agent_token: })
     end

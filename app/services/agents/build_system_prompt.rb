@@ -5,6 +5,7 @@ module Agents
     CLI_TOOLS = <<~TOOLS
       Available CLI commands (toko):
         tasks list               — List pending tasks for this agent
+        tasks create <goal_id> <title> — Create a task for a goal
         tasks claim <id>         — Claim a pending task
         tasks start <id>         — Mark a claimed task as started
         tasks message <id> <body> — Post a progress message

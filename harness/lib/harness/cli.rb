@@ -7,6 +7,7 @@ module Harness
 
       Commands:
         tasks list                         List pending tasks
+        tasks create <goal_id> <title>     Create a task for a goal
         tasks claim <id>                   Claim a task
         tasks start <id>                   Mark a claimed task as started
         tasks complete <id>                Mark a started task as completed
@@ -31,6 +32,7 @@ module Harness
 
       case [ resource, command ]
       in [ "tasks", "list" ]      then tasks_list
+      in [ "tasks", "create" ]    then tasks_create(args[0], args[1..].join(" "))
       in [ "tasks", "claim" ]     then tasks_claim(args.first)
       in [ "tasks", "start" ]     then tasks_start(args.first)
       in [ "tasks", "complete" ]  then tasks_complete(args.first)
@@ -60,6 +62,18 @@ module Harness
         puts "No pending tasks."
       else
         tasks.each { |t| puts "#{t[:id]}\t#{t[:title]}\t#{t[:status]}" }
+      end
+    end
+
+    def tasks_create(goal_id, title)
+      abort "goal id required" unless goal_id
+      abort "title required" if title.nil? || title.empty?
+      result = client.create_task(goal_id, title: title, agent_token: token)
+      if result[:status] == "created"
+        puts "Created task #{result.dig(:task, :id)} for goal #{goal_id}."
+      else
+        warn "Could not create task: #{result[:error]}"
+        exit 1
       end
     end
 
