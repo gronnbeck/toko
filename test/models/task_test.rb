@@ -21,4 +21,16 @@ class TaskTest < ActiveSupport::TestCase
   test "has expected statuses" do
     assert_equal %w[pending claimed started completed failed timed_out], Task.statuses.keys
   end
+
+  test "optionally belongs to a goal" do
+    org = Organization.create!(name: "Acme")
+    goal = Goal.create!(title: "Ship v1", organization: org)
+    task = Task.create!(title: "Fix bug", goal: goal)
+    assert_equal goal, task.goal
+  end
+
+  test "valid without a goal" do
+    task = Task.new(title: "Fix bug")
+    assert task.valid?
+  end
 end

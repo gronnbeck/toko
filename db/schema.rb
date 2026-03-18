@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_114229) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_114411) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -76,11 +76,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114229) do
   create_table "tasks", force: :cascade do |t|
     t.integer "claimed_by_id"
     t.datetime "created_at", null: false
+    t.integer "goal_id"
     t.integer "status", default: 0, null: false
     t.datetime "timeout_at"
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["claimed_by_id"], name: "index_tasks_on_claimed_by_id"
+    t.index ["goal_id"], name: "index_tasks_on_goal_id"
   end
 
   add_foreign_key "agents", "organizations"
@@ -90,4 +92,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114229) do
   add_foreign_key "task_relevances", "agents"
   add_foreign_key "task_relevances", "tasks"
   add_foreign_key "tasks", "agents", column: "claimed_by_id"
+  add_foreign_key "tasks", "goals"
 end

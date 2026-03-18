@@ -30,4 +30,17 @@ class GoalTest < ActiveSupport::TestCase
     goal = Goal.create!(title: "Ship v1", organization: @org)
     assert_equal @org, goal.organization
   end
+
+  test "has many tasks" do
+    goal = Goal.create!(title: "Ship v1", organization: @org)
+    task = Task.create!(title: "Fix bug", goal: goal)
+    assert_includes goal.tasks, task
+  end
+
+  test "nullifies tasks on destroy" do
+    goal = Goal.create!(title: "Ship v1", organization: @org)
+    task = Task.create!(title: "Fix bug", goal: goal)
+    goal.destroy
+    assert_nil task.reload.goal_id
+  end
 end

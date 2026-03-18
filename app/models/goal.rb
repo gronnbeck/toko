@@ -4,6 +4,7 @@ class Goal < ApplicationRecord
   enum :status, { pending: 0, active: 1, review: 2, completed: 3 }
 
   belongs_to :organization
+  has_many :tasks, dependent: :nullify
 
   validates :title, presence: true
 end
