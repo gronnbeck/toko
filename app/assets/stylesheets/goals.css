@@ -1,0 +1,73 @@
+/* Goals */
+.goals-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.goals-header .home__title {
+  margin-bottom: 0;
+}
+
+.goal-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.goal-card__org {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Status pills for goal statuses */
+.status-pill--active  { background: var(--color-in-progress-bg); color: var(--color-in-progress-text); }
+.status-pill--review  { background: var(--color-busy-bg);        color: var(--color-busy-text); }
+
+/* Goal detail */
+.goal-detail {
+  margin-bottom: 24px;
+}
+
+.goal-detail__desc {
+  color: var(--color-text-subtle);
+  line-height: 1.6;
+}
+
+/* Transitions */
+.goal-transitions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.goal-transitions__btn {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.goal-transitions__btn:hover {
+  background: var(--color-surface-hover);
+}
+
+/* Tasks under goal */
+.goal-tasks {
+  margin-bottom: 24px;
+}
+
+.goal-tasks__heading {
+  margin-bottom: 12px;
+}
+
+/* Actions */
+.goal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.goal-actions__delete {
+  background: var(--color-failed-bg);
+  color: var(--color-failed-text);
+}

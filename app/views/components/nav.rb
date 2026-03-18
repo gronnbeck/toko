@@ -5,6 +5,7 @@ module Components
     NAV_ITEMS = [
       { label: "Tasks",         path: "/" },
       { label: "Agents",        path: "/agents" },
+      { label: "Goals",         path: "/goals" },
       { label: "Organizations", path: "/organizations" }
     ].freeze
 

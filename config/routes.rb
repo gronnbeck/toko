@@ -4,6 +4,11 @@ Rails.application.routes.draw do
   root "home#index"
   resources :agents, only: [ :index, :show, :update ]
   resources :organizations, only: [ :index, :show, :update ]
+  resources :goals do
+    member do
+      post :transition
+    end
+  end
 
   namespace :api do
     namespace :v1 do
