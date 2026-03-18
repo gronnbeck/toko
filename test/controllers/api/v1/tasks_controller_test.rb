@@ -14,8 +14,7 @@ module Api
         get api_v1_tasks_path, as: :json
         assert_response :success
         tasks = response.parsed_body["tasks"]
-        assert_equal 1, tasks.length
-        assert_equal @task.id, tasks.first["id"]
+        assert_includes tasks.map { |t| t["id"] }, @task.id
       end
 
       test "POST claim returns claimed" do

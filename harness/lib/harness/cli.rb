@@ -21,10 +21,10 @@ module Harness
       resource, command, *args = argv
 
       case [ resource, command ]
-      in ["tasks", "list"]   then tasks_list
-      in ["tasks", "claim"]  then tasks_claim(args.first)
-      in ["tasks", "complete"] then tasks_complete(args.first)
-      in ["tasks", "fail"]   then tasks_fail(args.first)
+      in [ "tasks", "list" ]     then tasks_list
+      in [ "tasks", "claim" ]    then tasks_claim(args.first)
+      in [ "tasks", "complete" ] then tasks_complete(args.first)
+      in [ "tasks", "fail" ]     then tasks_fail(args.first)
       else
         puts USAGE
         exit 1

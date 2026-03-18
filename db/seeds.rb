@@ -8,7 +8,7 @@
 end
 
 [
-  { name: "Alpha",   status: :idle },
+  { name: "Alpha",   status: :online },
   { name: "Bravo",   status: :busy },
   { name: "Charlie", status: :offline }
 ].each do |attrs|
