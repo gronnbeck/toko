@@ -15,6 +15,9 @@ module Agents
       assert_includes prompt, "Be safe."
       assert_includes prompt, "Run tests."
       assert_includes prompt, "tasks claim"
+      assert_includes prompt, "tasks cost"
+      assert_includes prompt, "goals list"
+      assert_includes prompt, "goals activate"
     end
 
     test "works without org or mission" do

@@ -12,6 +12,9 @@ module Agents
         tasks complete <id>      — Mark a started task as completed
         tasks fail <id>          — Mark a task as failed
         tasks relevance <id> <true|false> — Report task relevance
+        tasks cost <id> <cents>  — Report task cost in cents
+        goals list               — List goals
+        goals activate <id>      — Activate a pending goal
     TOOLS
 
     module_function
