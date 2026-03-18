@@ -49,6 +49,24 @@ module Harness
       post("/api/v1/tasks/#{task_id}/relevance", { relevant:, agent_token: })
     end
 
+    def fetch_goals(organization_id: nil)
+      path = "/api/v1/goals"
+      path += "?organization_id=#{organization_id}" if organization_id
+      get(path)
+    end
+
+    def activate_goal(goal_id)
+      post("/api/v1/goals/#{goal_id}/activate", {})
+    end
+
+    def report_cost(task_id, cost_cents:, agent_token:)
+      post("/api/v1/tasks/#{task_id}/report_cost", { cost_cents:, agent_token: })
+    end
+
+    def check_budget(agent_token:)
+      get("/api/v1/agents/#{agent_token}/budget_check")
+    end
+
     private
 
     def get(path)
