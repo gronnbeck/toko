@@ -31,6 +31,7 @@ module Harness
 
       config.agent_tokens.each do |token|
         break if at_capacity?
+        next unless within_budget?(token)
 
         tasks = client.fetch_pending_tasks(agent_token: token).fetch(:tasks, [])
         tasks.take(available_slots).each { |task| dispatch(task, token:) }
@@ -41,6 +42,13 @@ module Harness
       thread = Thread.new { AgentRunner.run(task:, client:, token:) }
       threads << thread
       threads.select!(&:alive?)
+    end
+
+    def within_budget?(token)
+      result = client.check_budget(agent_token: token)
+      result.fetch(:allowed, true)
+    rescue StandardError
+      true
     end
 
     def at_capacity? = threads.count(&:alive?) >= config.max_concurrent_agents
