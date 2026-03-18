@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "home#index"
-  resources :agents, only: [ :index, :show, :update ]
+  resources :agents, only: [ :index, :show, :update ] do
+    resources :agent_skills, only: [ :create, :destroy ]
+  end
+  resources :skills, only: [ :show, :update, :destroy ]
   resources :organizations, only: [ :index, :show, :update ] do
     resource :budget, only: [ :update ]
   end
