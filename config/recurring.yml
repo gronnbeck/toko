@@ -16,3 +16,6 @@ production:
   timeout_tasks:
     class: TimeoutTasksJob
     schedule: every minute
+  deduct_costs:
+    class: DeductCostsJob
+    schedule: every 5 minutes
