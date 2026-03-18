@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "../config/environment"
+
+AGENT_NAMES = %w[Alpha Bravo Charlie].freeze
+SETTINGS_PATH = Rails.root.join("harness/settings.yml")
+
+agents = AGENT_NAMES.map do |name|
+  Agent.find_or_create_by!(name:)
+end
+
+yaml = {
+  "server_url" => "http://localhost:3360",
+  "poll_interval_seconds" => 5,
+  "ping_interval_seconds" => 30,
+  "agents" => {
+    "max_concurrent" => agents.size,
+    "tokens" => agents.map(&:token)
+  }
+}
+
+File.write(SETTINGS_PATH, yaml.to_yaml)
+
+puts "Wrote #{SETTINGS_PATH} with #{agents.size} agents:"
+agents.each { |a| puts "  #{a.name} (#{a.token})" }
+puts
+puts "Start the server, then run:"
+puts "  bin/harness harness/settings.yml"
