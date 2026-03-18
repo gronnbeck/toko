@@ -7,7 +7,12 @@ module Api
       before_action :set_agent, only: [ :claim, :start, :complete, :fail ]
 
       def index
-        tasks = Task.where(status: :pending).order(created_at: :asc)
+        tasks = if params[:agent_token].present?
+          agent = Agent.find_by!(token: params[:agent_token])
+          Tasks::PendingForAgent.call(agent: agent)
+        else
+          Task.where(status: :pending).order(created_at: :asc)
+        end
         render json: { tasks: tasks.map { |t| serialize(t) } }
       end
 

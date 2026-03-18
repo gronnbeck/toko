@@ -5,10 +5,18 @@ class Agent < ApplicationRecord
 
   belongs_to :organization, optional: true
   has_one :mission, -> { where(kind: :mission) }, class_name: "Prompt", as: :promptable, dependent: :destroy
+  has_many :task_relevances, dependent: :destroy
 
   validates :name, presence: true
 
   before_create :assign_token
+
+  def mission_digest
+    body = mission&.body
+    return nil unless body
+
+    Digest::SHA256.hexdigest(body)
+  end
 
   def display_status
     return :offline if last_seen_at.nil? || last_seen_at < 10.minutes.ago

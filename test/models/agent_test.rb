@@ -83,4 +83,15 @@ class AgentTest < ActiveSupport::TestCase
     agent = Agent.create!(name: "Alpha", organization: org)
     assert_equal org, agent.organization
   end
+
+  test "mission_digest returns SHA256 of mission body" do
+    agent = Agent.create!(name: "Agent 1")
+    Prompt.create!(body: "Do testing work.", promptable: agent, kind: :mission)
+    assert_equal Digest::SHA256.hexdigest("Do testing work."), agent.mission_digest
+  end
+
+  test "mission_digest is nil without a mission" do
+    agent = Agent.create!(name: "Agent 1")
+    assert_nil agent.mission_digest
+  end
 end

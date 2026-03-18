@@ -5,6 +5,7 @@ class Task < ApplicationRecord
 
   belongs_to :claimed_by, class_name: "Agent", optional: true
   has_many :task_messages, dependent: :destroy
+  has_many :task_relevances, dependent: :destroy
 
   validates :title, presence: true
 

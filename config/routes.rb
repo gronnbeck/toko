@@ -15,6 +15,7 @@ Rails.application.routes.draw do
           post :fail
         end
         resources :messages, only: [ :index, :create ], controller: "task_messages"
+        resource :relevance, only: [ :create ], controller: "task_relevances"
       end
 
       resources :agents, param: :token, only: [] do

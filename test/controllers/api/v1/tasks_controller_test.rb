@@ -56,6 +56,20 @@ module Api
         assert_response :success
         assert @task.reload.failed?
       end
+
+      test "GET index with agent_token filters out irrelevant tasks" do
+        Prompt.create!(body: "Run tests.", promptable: @agent, kind: :mission)
+        TaskRelevance.create!(
+          task: @task, agent: @agent, relevant: false,
+          mission_digest: @agent.mission_digest
+        )
+
+        get api_v1_tasks_path, params: { agent_token: @agent.token }, as: :json
+        assert_response :success
+
+        ids = response.parsed_body["tasks"].map { |t| t["id"] }
+        assert_not_includes ids, @task.id
+      end
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_073643) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_073942) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -51,6 +51,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_073643) do
     t.index ["task_id"], name: "index_task_messages_on_task_id"
   end
 
+  create_table "task_relevances", force: :cascade do |t|
+    t.integer "agent_id", null: false
+    t.datetime "created_at", null: false
+    t.string "mission_digest", null: false
+    t.boolean "relevant", null: false
+    t.integer "task_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_task_relevances_on_agent_id"
+    t.index ["task_id", "agent_id"], name: "index_task_relevances_on_task_id_and_agent_id", unique: true
+    t.index ["task_id"], name: "index_task_relevances_on_task_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.integer "claimed_by_id"
     t.datetime "created_at", null: false
@@ -64,5 +76,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_073643) do
   add_foreign_key "agents", "organizations"
   add_foreign_key "task_messages", "agents"
   add_foreign_key "task_messages", "tasks"
+  add_foreign_key "task_relevances", "agents"
+  add_foreign_key "task_relevances", "tasks"
   add_foreign_key "tasks", "agents", column: "claimed_by_id"
 end
