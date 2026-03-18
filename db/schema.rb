@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_073150) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_073643) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -40,6 +40,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_073150) do
     t.index ["promptable_type", "promptable_id"], name: "index_prompts_on_promptable"
   end
 
+  create_table "task_messages", force: :cascade do |t|
+    t.integer "agent_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.integer "kind", default: 0, null: false
+    t.integer "task_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id"], name: "index_task_messages_on_agent_id"
+    t.index ["task_id"], name: "index_task_messages_on_task_id"
+  end
+
   create_table "tasks", force: :cascade do |t|
     t.integer "claimed_by_id"
     t.datetime "created_at", null: false
@@ -51,5 +62,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_073150) do
   end
 
   add_foreign_key "agents", "organizations"
+  add_foreign_key "task_messages", "agents"
+  add_foreign_key "task_messages", "tasks"
   add_foreign_key "tasks", "agents", column: "claimed_by_id"
 end
