@@ -94,4 +94,14 @@ class AgentTest < ActiveSupport::TestCase
     agent = Agent.create!(name: "Agent 1")
     assert_nil agent.mission_digest
   end
+
+  test "daily_budget_cents is nil by default" do
+    agent = Agent.create!(name: "Agent 1")
+    assert_nil agent.daily_budget_cents
+  end
+
+  test "daily_budget_cents can be set" do
+    agent = Agent.create!(name: "Agent 1", daily_budget_cents: 2000)
+    assert_equal 2000, agent.daily_budget_cents
+  end
 end
