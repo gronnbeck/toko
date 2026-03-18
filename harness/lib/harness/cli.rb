@@ -14,6 +14,9 @@ module Harness
         tasks message <id> <body>          Post a progress message
         tasks result <id> <body>           Post a result message
         tasks relevance <id> <true|false>  Report task relevance
+        tasks cost <id> <cents>            Report task cost in cents
+        goals list                         List goals
+        goals activate <id>                Activate a pending goal
     USAGE
 
     def initialize(client:, token:)
@@ -33,6 +36,9 @@ module Harness
       in [ "tasks", "message" ]   then tasks_message(args[0], args[1..].join(" "))
       in [ "tasks", "result" ]    then tasks_result(args[0], args[1..].join(" "))
       in [ "tasks", "relevance" ] then tasks_relevance(args[0], args[1])
+      in [ "tasks", "cost" ]      then tasks_cost(args[0], args[1])
+      in [ "goals", "list" ]      then goals_list
+      in [ "goals", "activate" ]  then goals_activate(args.first)
       else
         puts USAGE
         exit 1
@@ -112,6 +118,34 @@ module Harness
       relevant = relevant_str == "true"
       client.report_relevance(id, relevant: relevant, agent_token: token)
       puts "Reported relevance=#{relevant} for task #{id}."
+    end
+
+    def tasks_cost(id, cents)
+      abort "task id required" unless id
+      abort "cost in cents required" unless cents
+      client.report_cost(id, cost_cents: cents.to_i, agent_token: token)
+      puts "Reported cost=#{cents} cents for task #{id}."
+    end
+
+    def goals_list
+      result = client.fetch_goals
+      goals = result.fetch(:goals, [])
+      if goals.empty?
+        puts "No goals."
+      else
+        goals.each { |g| puts "#{g[:id]}\t#{g[:status]}\t#{g[:title]}" }
+      end
+    end
+
+    def goals_activate(id)
+      abort "goal id required" unless id
+      result = client.activate_goal(id)
+      if result[:status] == "active"
+        puts "Goal #{id} activated."
+      else
+        warn "Could not activate goal #{id}: #{result[:error]}"
+        exit 1
+      end
     end
   end
 end
