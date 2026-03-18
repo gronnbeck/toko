@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :tasks, only: [ :index ] do
         member do
           post :claim
+          post :start
           post :complete
           post :fail
         end

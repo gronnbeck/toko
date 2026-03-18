@@ -3,8 +3,8 @@
 module Api
   module V1
     class TasksController < Api::BaseController
-      before_action :set_task, only: [ :claim, :complete, :fail ]
-      before_action :set_agent, only: [ :claim, :complete, :fail ]
+      before_action :set_task, only: [ :claim, :start, :complete, :fail ]
+      before_action :set_agent, only: [ :claim, :start, :complete, :fail ]
 
       def index
         tasks = Task.where(status: :pending).order(created_at: :asc)
@@ -12,22 +12,43 @@ module Api
       end
 
       def claim
-        if @task.pending?
-          @task.update!(status: :claimed, claimed_by: @agent)
-          render json: { status: "claimed", task: serialize(@task) }
+        result = Tasks::Claim.call(task: @task, agent: @agent)
+
+        if result[:error]
+          render json: { error: result[:error] }, status: :conflict
         else
-          render json: { error: "Task already claimed" }, status: :conflict
+          render json: { status: "claimed", task: serialize(@task.reload) }
+        end
+      end
+
+      def start
+        result = Tasks::Start.call(task: @task, agent: @agent)
+
+        if result[:error]
+          render json: { error: result[:error] }, status: :unprocessable_entity
+        else
+          render json: { status: "started" }
         end
       end
 
       def complete
-        @task.update!(status: :completed)
-        render json: { status: "completed" }
+        result = Tasks::Complete.call(task: @task, agent: @agent)
+
+        if result[:error]
+          render json: { error: result[:error] }, status: :unprocessable_entity
+        else
+          render json: { status: "completed" }
+        end
       end
 
       def fail
-        @task.update!(status: :failed)
-        render json: { status: "failed" }
+        result = Tasks::Fail.call(task: @task, agent: @agent)
+
+        if result[:error]
+          render json: { error: result[:error] }, status: :unprocessable_entity
+        else
+          render json: { status: "failed" }
+        end
       end
 
       private
@@ -37,8 +58,7 @@ module Api
       end
 
       def set_agent
-        token = params[:agent_token]
-        @agent = Agent.find_by!(token:)
+        @agent = Agent.find_by!(token: params[:agent_token])
       end
 
       def serialize(task)

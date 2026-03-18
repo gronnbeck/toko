@@ -31,15 +31,27 @@ module Api
         assert_response :conflict
       end
 
-      test "POST complete marks task completed" do
+      test "POST start transitions claimed to started" do
         @task.update!(status: :claimed, claimed_by: @agent)
+        post start_api_v1_task_path(@task), params: { agent_token: @agent.token }, as: :json
+        assert_response :success
+        assert @task.reload.started?
+      end
+
+      test "POST start returns 422 when not claimed" do
+        post start_api_v1_task_path(@task), params: { agent_token: @agent.token }, as: :json
+        assert_response :unprocessable_entity
+      end
+
+      test "POST complete marks task completed" do
+        @task.update!(status: :started, claimed_by: @agent)
         post complete_api_v1_task_path(@task), params: { agent_token: @agent.token }, as: :json
         assert_response :success
         assert @task.reload.completed?
       end
 
       test "POST fail marks task failed" do
-        @task.update!(status: :claimed, claimed_by: @agent)
+        @task.update!(status: :started, claimed_by: @agent)
         post fail_api_v1_task_path(@task), params: { agent_token: @agent.token, error: "boom" }, as: :json
         assert_response :success
         assert @task.reload.failed?
