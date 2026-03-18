@@ -28,11 +28,14 @@ module Api
         assert_equal @goal.id, goals.first["id"]
       end
 
-      test "POST activate sets pending goal to active" do
-        post activate_api_v1_goal_path(@goal), as: :json
+      test "POST activate sets pending goal to active and creates planning task" do
+        assert_difference "Task.count", 1 do
+          post activate_api_v1_goal_path(@goal), as: :json
+        end
         assert_response :success
         assert_equal "active", response.parsed_body["status"]
         assert @goal.reload.active?
+        assert_equal "Plan goal: Ship v1", @goal.tasks.last.title
       end
 
       test "POST activate returns 422 if not pending" do

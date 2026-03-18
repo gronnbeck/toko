@@ -46,7 +46,11 @@ class GoalsController < ApplicationController
   end
 
   def transition
-    @goal.update!(status: params[:status])
+    if params[:status] == "active"
+      Goals::Activate.call(goal: @goal)
+    else
+      @goal.update!(status: params[:status])
+    end
     redirect_to goal_path(@goal)
   end
 

@@ -14,12 +14,12 @@ module Api
 
       def activate
         goal = Goal.find(params[:id])
+        result = Goals::Activate.call(goal: goal)
 
-        if goal.pending?
-          goal.update!(status: :active)
-          render json: { status: "active", goal: serialize(goal) }
+        if result[:error]
+          render json: { error: result[:error] }, status: :unprocessable_entity
         else
-          render json: { error: "Goal is not pending" }, status: :unprocessable_entity
+          render json: { status: "active", goal: serialize(goal) }
         end
       end
 
