@@ -17,11 +17,12 @@ module Api
         assert_includes tasks.map { |t| t["id"] }, @task.id
       end
 
-      test "POST claim returns claimed" do
+      test "POST claim returns claimed with system_prompt" do
         post claim_api_v1_task_path(@task), params: { agent_token: @agent.token }, as: :json
         assert_response :success
         assert_equal "claimed", response.parsed_body["status"]
         assert_equal @agent.id, @task.reload.claimed_by_id
+        assert response.parsed_body.key?("system_prompt")
       end
 
       test "POST claim returns 409 when already claimed" do

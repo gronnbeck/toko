@@ -22,7 +22,8 @@ module Api
         if result[:error]
           render json: { error: result[:error] }, status: :conflict
         else
-          render json: { status: "claimed", task: serialize(@task.reload) }
+          system_prompt = Agents::BuildSystemPrompt.call(agent: @agent)
+          render json: { status: "claimed", task: serialize(@task.reload), system_prompt: system_prompt }
         end
       end
 
