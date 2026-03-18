@@ -19,6 +19,12 @@ Rails.application.routes.draw do
         resource :relevance, only: [ :create ], controller: "task_relevances"
       end
 
+      resources :goals, only: [ :index ] do
+        member do
+          post :activate
+        end
+      end
+
       resources :agents, param: :token, only: [] do
         resource :ping, only: [ :create ]
       end
