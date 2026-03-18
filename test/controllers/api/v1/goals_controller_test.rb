@@ -38,6 +38,15 @@ module Api
         assert_equal "Plan goal: Ship v1", @goal.tasks.last.title
       end
 
+      test "GET index includes task_count" do
+        Task.create!(title: "Task 1", goal: @goal)
+        Task.create!(title: "Task 2", goal: @goal)
+
+        get api_v1_goals_path, as: :json
+        goal_json = response.parsed_body["goals"].find { |g| g["id"] == @goal.id }
+        assert_equal 2, goal_json["task_count"]
+      end
+
       test "POST activate returns 422 if not pending" do
         @goal.update!(status: :active)
         post activate_api_v1_goal_path(@goal), as: :json
