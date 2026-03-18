@@ -104,4 +104,20 @@ class AgentTest < ActiveSupport::TestCase
     agent = Agent.create!(name: "Agent 1", daily_budget_cents: 2000)
     assert_equal 2000, agent.daily_budget_cents
   end
+
+  test "has many skills through agent_skills" do
+    agent = Agent.create!(name: "Agent 1")
+    skill = Skill.create!(name: "rails-conventions")
+    AgentSkill.create!(agent: agent, skill: skill)
+    assert_includes agent.skills, skill
+  end
+
+  test "destroying agent destroys agent_skills" do
+    agent = Agent.create!(name: "Agent 1")
+    skill = Skill.create!(name: "rails-conventions")
+    AgentSkill.create!(agent: agent, skill: skill)
+    assert_difference "AgentSkill.count", -1 do
+      agent.destroy
+    end
+  end
 end

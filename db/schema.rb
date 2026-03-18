@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_114747) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_134743) do
+  create_table "agent_skills", force: :cascade do |t|
+    t.integer "agent_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "skill_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["agent_id", "skill_id"], name: "index_agent_skills_on_agent_id_and_skill_id", unique: true
+    t.index ["agent_id"], name: "index_agent_skills_on_agent_id"
+    t.index ["skill_id"], name: "index_agent_skills_on_skill_id"
+  end
+
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "daily_budget_cents"
@@ -60,6 +70,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114747) do
     t.index ["promptable_type", "promptable_id"], name: "index_prompts_on_promptable"
   end
 
+  create_table "skills", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "keywords"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_skills_on_name", unique: true
+  end
+
   create_table "task_messages", force: :cascade do |t|
     t.integer "agent_id", null: false
     t.text "body", null: false
@@ -97,6 +116,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114747) do
     t.index ["goal_id"], name: "index_tasks_on_goal_id"
   end
 
+  add_foreign_key "agent_skills", "agents"
+  add_foreign_key "agent_skills", "skills"
   add_foreign_key "agents", "organizations"
   add_foreign_key "budgets", "organizations"
   add_foreign_key "goals", "organizations"

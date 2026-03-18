@@ -5,6 +5,8 @@ class Agent < ApplicationRecord
 
   belongs_to :organization, optional: true
   has_one :mission, -> { where(kind: :mission) }, class_name: "Prompt", as: :promptable, dependent: :destroy
+  has_many :agent_skills, dependent: :destroy
+  has_many :skills, through: :agent_skills
   has_many :task_relevances, dependent: :destroy
 
   validates :name, presence: true

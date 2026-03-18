@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Prompt < ApplicationRecord
-  enum :kind, { mission: 0, policy: 1 }
+  enum :kind, { mission: 0, policy: 1, skill: 2 }
 
   belongs_to :promptable, polymorphic: true
 
