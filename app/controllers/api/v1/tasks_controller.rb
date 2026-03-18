@@ -78,7 +78,7 @@ module Api
       end
 
       def serialize(task)
-        { id: task.id, title: task.title, status: task.status, goal_id: task.goal_id }
+        { id: task.id, title: task.title, description: task.description, status: task.status, goal_id: task.goal_id }
       end
     end
   end
