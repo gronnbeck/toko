@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
       resources :agents, param: :token, only: [] do
         resource :ping, only: [ :create ]
+        resource :budget_check, only: [ :show ], controller: "agent_budget_checks"
       end
     end
   end
