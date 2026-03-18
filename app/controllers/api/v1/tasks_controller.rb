@@ -3,8 +3,8 @@
 module Api
   module V1
     class TasksController < Api::BaseController
-      before_action :set_task, only: [ :claim, :start, :complete, :fail ]
-      before_action :set_agent, only: [ :claim, :start, :complete, :fail ]
+      before_action :set_task, only: [ :claim, :start, :complete, :fail, :report_cost ]
+      before_action :set_agent, only: [ :claim, :start, :complete, :fail, :report_cost ]
 
       def index
         tasks = if params[:agent_token].present?
@@ -54,6 +54,16 @@ module Api
           render json: { error: result[:error] }, status: :unprocessable_entity
         else
           render json: { status: "failed" }
+        end
+      end
+
+      def report_cost
+        result = Tasks::ReportCost.call(task: @task, agent: @agent, cost_cents: params[:cost_cents].to_i)
+
+        if result[:error]
+          render json: { error: result[:error] }, status: :unprocessable_entity
+        else
+          render json: { status: "recorded", cost_cents: result[:cost_cents] }
         end
       end
 

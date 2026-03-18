@@ -58,6 +58,18 @@ module Api
         assert @task.reload.failed?
       end
 
+      test "POST report_cost records cost on completed task" do
+        @task.update!(status: :completed, claimed_by: @agent)
+        post report_cost_api_v1_task_path(@task), params: { agent_token: @agent.token, cost_cents: 500 }, as: :json
+        assert_response :success
+        assert_equal 500, @task.reload.cost_cents
+      end
+
+      test "POST report_cost returns 422 on error" do
+        post report_cost_api_v1_task_path(@task), params: { agent_token: @agent.token, cost_cents: 500 }, as: :json
+        assert_response :unprocessable_entity
+      end
+
       test "GET index with agent_token filters out irrelevant tasks" do
         Prompt.create!(body: "Run tests.", promptable: @agent, kind: :mission)
         TaskRelevance.create!(

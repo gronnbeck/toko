@@ -13,6 +13,7 @@ Rails.application.routes.draw do
           post :start
           post :complete
           post :fail
+          post :report_cost
         end
         resources :messages, only: [ :index, :create ], controller: "task_messages"
         resource :relevance, only: [ :create ], controller: "task_relevances"
