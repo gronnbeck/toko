@@ -6,10 +6,14 @@ module Harness
       Usage: toko <command> [args]
 
       Commands:
-        tasks list               List pending tasks
-        tasks claim <id>         Claim a task (exits 0 on success, 1 if already claimed)
-        tasks complete <id>      Mark a task as complete
-        tasks fail <id>          Mark a task as failed
+        tasks list                         List pending tasks
+        tasks claim <id>                   Claim a task
+        tasks start <id>                   Mark a claimed task as started
+        tasks complete <id>                Mark a started task as completed
+        tasks fail <id>                    Mark a task as failed
+        tasks message <id> <body>          Post a progress message
+        tasks result <id> <body>           Post a result message
+        tasks relevance <id> <true|false>  Report task relevance
     USAGE
 
     def initialize(client:, token:)
@@ -21,10 +25,14 @@ module Harness
       resource, command, *args = argv
 
       case [ resource, command ]
-      in [ "tasks", "list" ]     then tasks_list
-      in [ "tasks", "claim" ]    then tasks_claim(args.first)
-      in [ "tasks", "complete" ] then tasks_complete(args.first)
-      in [ "tasks", "fail" ]     then tasks_fail(args.first)
+      in [ "tasks", "list" ]      then tasks_list
+      in [ "tasks", "claim" ]     then tasks_claim(args.first)
+      in [ "tasks", "start" ]     then tasks_start(args.first)
+      in [ "tasks", "complete" ]  then tasks_complete(args.first)
+      in [ "tasks", "fail" ]      then tasks_fail(args.first)
+      in [ "tasks", "message" ]   then tasks_message(args[0], args[1..].join(" "))
+      in [ "tasks", "result" ]    then tasks_result(args[0], args[1..].join(" "))
+      in [ "tasks", "relevance" ] then tasks_relevance(args[0], args[1])
       else
         puts USAGE
         exit 1
@@ -36,7 +44,7 @@ module Harness
     attr_reader :client, :token
 
     def tasks_list
-      result = client.fetch_pending_tasks
+      result = client.fetch_pending_tasks(agent_token: token)
       tasks = result.fetch(:tasks, [])
       if tasks.empty?
         puts "No pending tasks."
@@ -47,7 +55,7 @@ module Harness
 
     def tasks_claim(id)
       abort "task id required" unless id
-      result = client.claim_task(id)
+      result = client.claim_task(id, agent_token: token)
       if result[:status] == "claimed"
         puts "Claimed task #{id}."
       else
@@ -56,16 +64,54 @@ module Harness
       end
     end
 
+    def tasks_start(id)
+      abort "task id required" unless id
+      result = client.start_task(id, agent_token: token)
+      if result[:status] == "started"
+        puts "Started task #{id}."
+      else
+        warn "Could not start task #{id}: #{result[:error]}"
+        exit 1
+      end
+    end
+
     def tasks_complete(id)
       abort "task id required" unless id
-      client.complete_task(id, output: nil)
-      puts "Task #{id} marked complete."
+      result = client.complete_task(id, agent_token: token)
+      if result[:status] == "completed"
+        puts "Task #{id} marked complete."
+      else
+        warn "Could not complete task #{id}: #{result[:error]}"
+        exit 1
+      end
     end
 
     def tasks_fail(id)
       abort "task id required" unless id
-      client.fail_task(id, error: "failed via CLI")
+      client.fail_task(id, error: "failed via CLI", agent_token: token)
       puts "Task #{id} marked failed."
+    end
+
+    def tasks_message(id, body)
+      abort "task id required" unless id
+      abort "message body required" if body.empty?
+      client.post_message(id, body: body, agent_token: token)
+      puts "Posted message to task #{id}."
+    end
+
+    def tasks_result(id, body)
+      abort "task id required" unless id
+      abort "result body required" if body.empty?
+      client.post_result(id, body: body, agent_token: token)
+      puts "Posted result to task #{id}."
+    end
+
+    def tasks_relevance(id, relevant_str)
+      abort "task id required" unless id
+      abort "relevance (true|false) required" unless %w[true false].include?(relevant_str)
+      relevant = relevant_str == "true"
+      client.report_relevance(id, relevant: relevant, agent_token: token)
+      puts "Reported relevance=#{relevant} for task #{id}."
     end
   end
 end

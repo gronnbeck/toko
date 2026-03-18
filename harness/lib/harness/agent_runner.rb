@@ -13,13 +13,17 @@ module Harness
     end
 
     def run
-      result = client.claim_task(task.fetch(:id), agent_token: token)
-      return unless result[:status] == "claimed"
+      claim_result = client.claim_task(task_id, agent_token: token)
+      return unless claim_result[:status] == "claimed"
 
-      output = execute(task)
-      client.complete_task(task.fetch(:id), output:, agent_token: token)
+      system_prompt = claim_result[:system_prompt]
+
+      client.start_task(task_id, agent_token: token)
+      output = execute(task, system_prompt:)
+      client.post_result(task_id, body: output, agent_token: token) if output
+      client.complete_task(task_id, agent_token: token)
     rescue => e
-      client.fail_task(task.fetch(:id), error: e.message, agent_token: token)
+      client.fail_task(task_id, error: e.message, agent_token: token)
       raise
     end
 
@@ -27,8 +31,10 @@ module Harness
 
     attr_reader :task, :client, :token
 
-    def execute(task)
-      # TODO: spawn the actual agent process
+    def task_id = task.fetch(:id)
+
+    def execute(task, system_prompt:)
+      # TODO: spawn the actual agent process with system_prompt
       warn "Agent execution not yet implemented (task #{task[:id]})"
       nil
     end

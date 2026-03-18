@@ -15,20 +15,38 @@ module Harness
       post("/api/v1/agents/#{token}/ping", { status: })
     end
 
-    def fetch_pending_tasks
-      get("/api/v1/tasks?status=pending")
+    def fetch_pending_tasks(agent_token: nil)
+      path = "/api/v1/tasks"
+      path += "?agent_token=#{agent_token}" if agent_token
+      get(path)
     end
 
     def claim_task(task_id, agent_token:)
       post("/api/v1/tasks/#{task_id}/claim", { agent_token: })
     end
 
-    def complete_task(task_id, output:, agent_token:)
-      post("/api/v1/tasks/#{task_id}/complete", { output:, agent_token: })
+    def start_task(task_id, agent_token:)
+      post("/api/v1/tasks/#{task_id}/start", { agent_token: })
+    end
+
+    def complete_task(task_id, agent_token:)
+      post("/api/v1/tasks/#{task_id}/complete", { agent_token: })
     end
 
     def fail_task(task_id, error:, agent_token:)
       post("/api/v1/tasks/#{task_id}/fail", { error:, agent_token: })
+    end
+
+    def post_message(task_id, body:, agent_token:)
+      post("/api/v1/tasks/#{task_id}/messages", { body:, kind: "message", agent_token: })
+    end
+
+    def post_result(task_id, body:, agent_token:)
+      post("/api/v1/tasks/#{task_id}/messages", { body:, kind: "result", agent_token: })
+    end
+
+    def report_relevance(task_id, relevant:, agent_token:)
+      post("/api/v1/tasks/#{task_id}/relevance", { relevant:, agent_token: })
     end
 
     private

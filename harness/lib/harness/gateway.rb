@@ -29,10 +29,11 @@ module Harness
     def poll_and_dispatch
       return if at_capacity?
 
-      tasks = client.fetch_pending_tasks.fetch(:tasks, [])
-      tasks.take(available_slots).each do |task|
-        token = config.agent_tokens.first
-        dispatch(task, token:)
+      config.agent_tokens.each do |token|
+        break if at_capacity?
+
+        tasks = client.fetch_pending_tasks(agent_token: token).fetch(:tasks, [])
+        tasks.take(available_slots).each { |task| dispatch(task, token:) }
       end
     end
 
