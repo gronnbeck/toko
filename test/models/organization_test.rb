@@ -39,6 +39,20 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_equal policy, org.policy
   end
 
+  test "has many goals" do
+    org = Organization.create!(name: "Acme")
+    goal = Goal.create!(title: "Ship v1", organization: org)
+    assert_includes org.goals, goal
+  end
+
+  test "goals are destroyed with organization" do
+    org = Organization.create!(name: "Acme")
+    Goal.create!(title: "Ship v1", organization: org)
+    assert_difference "Goal.count", -1 do
+      org.destroy
+    end
+  end
+
   test "prompts are destroyed with organization" do
     org = Organization.create!(name: "Acme")
     Prompt.create!(body: "We help customers.", promptable: org, kind: :mission)
