@@ -14,6 +14,7 @@ module Harness
     end
 
     def run
+      log "Gateway started (#{config.agent_tokens.size} agents, poll every #{config.poll_interval_seconds}s)"
       Heartbeat.start(config:, client:)
 
       loop do
@@ -31,7 +32,11 @@ module Harness
 
       config.agent_tokens.each do |token|
         break if at_capacity?
-        next unless within_budget?(token)
+
+        unless within_budget?(token)
+          log "Agent #{short(token)} over daily budget, skipping"
+          next
+        end
 
         tasks = client.fetch_pending_tasks(agent_token: token).fetch(:tasks, [])
         tasks.take(available_slots).each { |task| dispatch(task, token:) }
@@ -39,6 +44,7 @@ module Harness
     end
 
     def dispatch(task, token:)
+      log "Dispatching task #{task[:id]} (#{task[:title]}) to #{short(token)}"
       thread = Thread.new { AgentRunner.run(task:, client:, token:) }
       threads << thread
       threads.select!(&:alive?)
@@ -53,5 +59,7 @@ module Harness
 
     def at_capacity? = threads.count(&:alive?) >= config.max_concurrent_agents
     def available_slots = config.max_concurrent_agents - threads.count(&:alive?)
+    def short(token) = token[0, 8]
+    def log(msg) = warn "[gateway] #{msg}"
   end
 end
