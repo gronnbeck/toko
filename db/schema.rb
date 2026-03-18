@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_18_114411) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_18_114537) do
   create_table "agents", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -22,6 +22,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114411) do
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_agents_on_organization_id"
     t.index ["token"], name: "index_agents_on_token", unique: true
+  end
+
+  create_table "budgets", force: :cascade do |t|
+    t.integer "amount_cents", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.string "currency", default: "USD", null: false
+    t.integer "organization_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_budgets_on_organization_id"
   end
 
   create_table "goals", force: :cascade do |t|
@@ -86,6 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_114411) do
   end
 
   add_foreign_key "agents", "organizations"
+  add_foreign_key "budgets", "organizations"
   add_foreign_key "goals", "organizations"
   add_foreign_key "task_messages", "agents"
   add_foreign_key "task_messages", "tasks"

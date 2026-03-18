@@ -53,6 +53,20 @@ class OrganizationTest < ActiveSupport::TestCase
     end
   end
 
+  test "has one budget" do
+    org = Organization.create!(name: "Acme")
+    budget = Budget.create!(organization: org, amount_cents: 5000)
+    assert_equal budget, org.budget
+  end
+
+  test "budget is destroyed with organization" do
+    org = Organization.create!(name: "Acme")
+    Budget.create!(organization: org)
+    assert_difference "Budget.count", -1 do
+      org.destroy
+    end
+  end
+
   test "prompts are destroyed with organization" do
     org = Organization.create!(name: "Acme")
     Prompt.create!(body: "We help customers.", promptable: org, kind: :mission)
