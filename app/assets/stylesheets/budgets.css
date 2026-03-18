@@ -1,0 +1,28 @@
+/* Budget */
+.budget-section {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--color-border);
+}
+
+.budget-section__heading {
+  margin-bottom: 16px;
+}
+
+.budget-section__summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.budget-section__amount {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+}
+
+.budget-section__currency {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}

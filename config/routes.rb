@@ -3,7 +3,9 @@ Rails.application.routes.draw do
 
   root "home#index"
   resources :agents, only: [ :index, :show, :update ]
-  resources :organizations, only: [ :index, :show, :update ]
+  resources :organizations, only: [ :index, :show, :update ] do
+    resource :budget, only: [ :update ]
+  end
   resources :goals do
     member do
       post :transition

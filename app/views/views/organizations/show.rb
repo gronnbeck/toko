@@ -15,6 +15,7 @@ module Views
           end
 
           render ::Components::OrganizationForm.new(organization: @organization)
+          render ::Components::BudgetForm.new(organization: @organization)
         end
       end
     end
