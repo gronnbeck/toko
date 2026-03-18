@@ -4,7 +4,7 @@ module Api
   module V1
     class TasksController < Api::BaseController
       before_action :set_task, only: [ :claim, :start, :complete, :fail, :report_cost ]
-      before_action :set_agent, only: [ :claim, :start, :complete, :fail, :report_cost ]
+      before_action :set_agent, only: [ :create, :claim, :start, :complete, :fail, :report_cost ]
 
       def index
         tasks = if params[:agent_token].present?
@@ -14,6 +14,17 @@ module Api
           Task.where(status: :pending).order(created_at: :asc)
         end
         render json: { tasks: tasks.map { |t| serialize(t) } }
+      end
+
+      def create
+        goal = Goal.find(params[:goal_id])
+        task = Tasks::Create.call(goal: goal, title: params[:title], description: params[:description], agent: @agent)
+
+        if task.persisted?
+          render json: { status: "created", task: serialize(task) }
+        else
+          render json: { error: task.errors.full_messages.join(", ") }, status: :unprocessable_entity
+        end
       end
 
       def claim

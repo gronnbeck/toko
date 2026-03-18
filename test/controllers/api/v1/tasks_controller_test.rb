@@ -80,6 +80,38 @@ module Api
         assert_response :unprocessable_entity
       end
 
+      test "POST create creates a task for a goal" do
+        org = Organization.create!(name: "Acme")
+        goal = Goal.create!(title: "Ship v1", organization: org)
+        agent = Agent.create!(name: "Planner", organization: org)
+
+        post api_v1_tasks_path, params: { agent_token: agent.token, goal_id: goal.id, title: "Write tests", description: "Cover edges" }, as: :json
+        assert_response :success
+        assert_equal "created", response.parsed_body["status"]
+        assert_equal "Write tests", response.parsed_body["task"]["title"]
+        assert_equal "Cover edges", response.parsed_body["task"]["description"]
+        assert_equal goal.id, response.parsed_body["task"]["goal_id"]
+      end
+
+      test "POST create returns 422 when org mismatch" do
+        org = Organization.create!(name: "Acme")
+        other_org = Organization.create!(name: "Other")
+        goal = Goal.create!(title: "Ship v1", organization: org)
+        outsider = Agent.create!(name: "Outsider", organization: other_org)
+
+        post api_v1_tasks_path, params: { agent_token: outsider.token, goal_id: goal.id, title: "Nope" }, as: :json
+        assert_response :unprocessable_entity
+      end
+
+      test "POST create returns 422 without title" do
+        org = Organization.create!(name: "Acme")
+        goal = Goal.create!(title: "Ship v1", organization: org)
+        agent = Agent.create!(name: "Planner", organization: org)
+
+        post api_v1_tasks_path, params: { agent_token: agent.token, goal_id: goal.id, title: "" }, as: :json
+        assert_response :unprocessable_entity
+      end
+
       test "GET index with agent_token filters out irrelevant tasks" do
         Prompt.create!(body: "Run tests.", promptable: @agent, kind: :mission)
         TaskRelevance.create!(
