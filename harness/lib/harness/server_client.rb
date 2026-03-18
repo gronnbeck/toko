@@ -67,6 +67,14 @@ module Harness
       get("/api/v1/agents/#{agent_token}/budget_check")
     end
 
+    def fetch_skills(agent_token:)
+      get("/api/v1/agents/#{agent_token}/skills")
+    end
+
+    def load_skill(skill_name, agent_token:)
+      get("/api/v1/agents/#{agent_token}/skills/#{skill_name}")
+    end
+
     private
 
     def get(path)

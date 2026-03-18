@@ -17,6 +17,8 @@ module Harness
         tasks cost <id> <cents>            Report task cost in cents
         goals list                         List goals
         goals activate <id>                Activate a pending goal
+        skills ls                          List available skills
+        skills load <name>                 Load a skill prompt
     USAGE
 
     def initialize(client:, token:)
@@ -39,6 +41,8 @@ module Harness
       in [ "tasks", "cost" ]      then tasks_cost(args[0], args[1])
       in [ "goals", "list" ]      then goals_list
       in [ "goals", "activate" ]  then goals_activate(args.first)
+      in [ "skills", "ls" ]       then skills_list
+      in [ "skills", "load" ]     then skills_load(args.first)
       else
         puts USAGE
         exit 1
@@ -145,6 +149,27 @@ module Harness
       else
         warn "Could not activate goal #{id}: #{result[:error]}"
         exit 1
+      end
+    end
+
+    def skills_list
+      result = client.fetch_skills(agent_token: token)
+      skills = result.fetch(:skills, [])
+      if skills.empty?
+        puts "No skills assigned."
+      else
+        skills.each { |s| puts "#{s[:name]}\t#{s[:keywords]}\t#{s[:description]}" }
+      end
+    end
+
+    def skills_load(name)
+      abort "skill name required" unless name
+      result = client.load_skill(name, agent_token: token)
+      if result[:error]
+        warn "Could not load skill #{name}: #{result[:error]}"
+        exit 1
+      else
+        puts result.dig(:skill, :prompt)
       end
     end
   end
