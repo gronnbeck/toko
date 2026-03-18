@@ -85,8 +85,11 @@ module Harness
     def request(uri, req)
       req["Authorization"] = "Bearer #{@api_key}"
       req["Content-Type"] = "application/json"
+      req["Accept"] = "application/json"
       res = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https") { |h| h.request(req) }
       JSON.parse(res.body, symbolize_names: true)
+    rescue JSON::ParserError
+      { error: "Invalid JSON response (HTTP #{res&.code})" }
     end
   end
 end
