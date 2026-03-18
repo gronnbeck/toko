@@ -58,6 +58,16 @@ module Api
         assert @task.reload.failed?
       end
 
+      test "GET index includes goal_id in response" do
+        org = Organization.create!(name: "Acme")
+        goal = Goal.create!(title: "Ship v1", organization: org)
+        @task.update!(goal: goal)
+
+        get api_v1_tasks_path, as: :json
+        task_json = response.parsed_body["tasks"].find { |t| t["id"] == @task.id }
+        assert_equal goal.id, task_json["goal_id"]
+      end
+
       test "POST report_cost records cost on completed task" do
         @task.update!(status: :completed, claimed_by: @agent)
         post report_cost_api_v1_task_path(@task), params: { agent_token: @agent.token, cost_cents: 500 }, as: :json
