@@ -15,6 +15,8 @@ module Agents
         tasks cost <id> <cents>  — Report task cost in cents
         goals list               — List goals
         goals activate <id>      — Activate a pending goal
+        skills ls                — List available skills
+        skills load <name>       — Load a skill prompt into context
     TOOLS
 
     module_function

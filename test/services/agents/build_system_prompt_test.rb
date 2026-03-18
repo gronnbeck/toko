@@ -18,6 +18,8 @@ module Agents
       assert_includes prompt, "tasks cost"
       assert_includes prompt, "goals list"
       assert_includes prompt, "goals activate"
+      assert_includes prompt, "skills ls"
+      assert_includes prompt, "skills load"
     end
 
     test "works without org or mission" do
