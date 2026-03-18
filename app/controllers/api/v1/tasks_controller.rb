@@ -13,7 +13,7 @@ module Api
 
       def claim
         if @task.pending?
-          @task.update!(status: :in_progress, claimed_by: @agent)
+          @task.update!(status: :claimed, claimed_by: @agent)
           render json: { status: "claimed", task: serialize(@task) }
         else
           render json: { error: "Task already claimed" }, status: :conflict

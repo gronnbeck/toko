@@ -26,20 +26,20 @@ module Api
 
       test "POST claim returns 409 when already claimed" do
         other = Agent.create!(name: "Bravo")
-        @task.update!(status: :in_progress, claimed_by: other)
+        @task.update!(status: :claimed, claimed_by: other)
         post claim_api_v1_task_path(@task), params: { agent_token: @agent.token }, as: :json
         assert_response :conflict
       end
 
       test "POST complete marks task completed" do
-        @task.update!(status: :in_progress, claimed_by: @agent)
+        @task.update!(status: :claimed, claimed_by: @agent)
         post complete_api_v1_task_path(@task), params: { agent_token: @agent.token }, as: :json
         assert_response :success
         assert @task.reload.completed?
       end
 
       test "POST fail marks task failed" do
-        @task.update!(status: :in_progress, claimed_by: @agent)
+        @task.update!(status: :claimed, claimed_by: @agent)
         post fail_api_v1_task_path(@task), params: { agent_token: @agent.token, error: "boom" }, as: :json
         assert_response :success
         assert @task.reload.failed?

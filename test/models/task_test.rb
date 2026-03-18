@@ -19,6 +19,6 @@ class TaskTest < ActiveSupport::TestCase
   end
 
   test "has expected statuses" do
-    assert Task.statuses.keys == %w[pending in_progress completed failed]
+    assert_equal %w[pending claimed started completed failed timed_out], Task.statuses.keys
   end
 end

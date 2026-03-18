@@ -30,9 +30,9 @@ end
 # -- Tasks --
 [
   { title: "Analyse error logs from production", status: :pending },
-  { title: "Write summary report for last sprint", status: :in_progress, claimed_by: agents.first },
+  { title: "Write summary report for last sprint", status: :claimed, claimed_by: agents.first },
   { title: "Update dependencies", status: :completed },
-  { title: "Deploy hotfix to staging", status: :failed }
+  { title: "Deploy hotfix to staging", status: :failed, claimed_by: agents.second }
 ].each do |attrs|
   Task.find_or_create_by!(title: attrs[:title]) do |t|
     t.status = attrs[:status]
