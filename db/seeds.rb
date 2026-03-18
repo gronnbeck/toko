@@ -79,6 +79,99 @@ end
   end
 end
 
+# -- Skills --
+skills_data = [
+  { name: "task-decomposition", keywords: "planning breakdown scoping",
+    description: "Break goals into well-scoped, actionable tasks",
+    prompt: "When decomposing goals into tasks:\n" \
+            "- Each task should be completable in one work session\n" \
+            "- Include clear acceptance criteria\n" \
+            "- Identify dependencies between tasks\n" \
+            "- Prefer small, focused tasks over large ones" },
+  { name: "prioritization", keywords: "priority ordering triage",
+    description: "Prioritize tasks by impact and urgency",
+    prompt: "When prioritizing tasks:\n" \
+            "- Consider goal deadlines and dependencies\n" \
+            "- Blocked tasks should not be prioritized over unblocked ones\n" \
+            "- Balance quick wins with high-impact work\n" \
+            "- Re-evaluate priorities when new goals arrive" },
+  { name: "rails-conventions", keywords: "ruby rails patterns",
+    description: "Follow Rails and project coding conventions",
+    prompt: "Follow these Rails conventions:\n" \
+            "- Use service objects (ModuleName::ClassName.call) for business logic\n" \
+            "- Keep controllers thin, models focused\n" \
+            "- Use Phlex for all view components\n" \
+            "- Max ~120 lines per file, max 7 methods\n" \
+            "- Prefer module_function over instance methods in services" },
+  { name: "testing-patterns", keywords: "tests tdd minitest",
+    description: "Write effective tests following project patterns",
+    prompt: "Follow these testing patterns:\n" \
+            "- Red-Green-Commit: write failing test, implement, commit\n" \
+            "- Use Minitest (not RSpec)\n" \
+            "- Test files mirror source structure under test/\n" \
+            "- Keep test files under ~120 lines\n" \
+            "- Run bin/ci before every commit" },
+  { name: "refactoring", keywords: "cleanup simplify extract",
+    description: "Improve code structure without changing behavior",
+    prompt: "When refactoring:\n" \
+            "- Ensure tests pass before and after changes\n" \
+            "- Extract methods when a method exceeds 10 lines\n" \
+            "- Replace conditionals with polymorphism when appropriate\n" \
+            "- Remove dead code rather than commenting it out\n" \
+            "- Keep commits small and focused on one refactoring at a time" },
+  { name: "code-review-checklist", keywords: "review quality checks",
+    description: "Systematic code review checklist",
+    prompt: "Code review checklist:\n" \
+            "- Tests exist and pass for new/changed behavior\n" \
+            "- No security vulnerabilities (check OWASP top 10)\n" \
+            "- Follows project conventions (service objects, Phlex views)\n" \
+            "- Files stay under ~120 lines, methods under 10 lines\n" \
+            "- No unnecessary complexity or premature abstractions\n" \
+            "- Commit messages are clear and descriptive" },
+  { name: "deployment-checklist", keywords: "deploy kamal production",
+    description: "Pre-deployment verification steps",
+    prompt: "Before deploying:\n" \
+            "- All tests pass (bin/ci green)\n" \
+            "- Migrations are reversible\n" \
+            "- No pending migrations in production\n" \
+            "- Check for N+1 queries in new code\n" \
+            "- Verify Docker build succeeds locally\n" \
+            "- Review Kamal deploy.yml for any config changes" },
+  { name: "incident-response", keywords: "outage alert rollback",
+    description: "Handle production incidents and alerts",
+    prompt: "During an incident:\n" \
+            "- Assess severity and impact immediately\n" \
+            "- Rollback first if the cause is a recent deploy\n" \
+            "- Check logs and error monitoring for root cause\n" \
+            "- Post status updates as progress messages\n" \
+            "- After resolution, create a task for post-mortem" }
+]
+
+agent_map = agents.index_by(&:name)
+skill_assignments = {
+  "task-decomposition" => %w[Planner],
+  "prioritization" => %w[Planner],
+  "rails-conventions" => %w[Coder Reviewer],
+  "testing-patterns" => %w[Coder Tester],
+  "refactoring" => %w[Coder Reviewer],
+  "code-review-checklist" => %w[Reviewer],
+  "deployment-checklist" => %w[Ops],
+  "incident-response" => %w[Ops]
+}
+
+skills_data.each do |attrs|
+  skill = Skill.find_or_create_by!(name: attrs[:name]) do |s|
+    s.keywords = attrs[:keywords]
+    s.description = attrs[:description]
+  end
+  Prompt.find_or_create_by!(promptable: skill, kind: :skill) do |p|
+    p.body = attrs[:prompt]
+  end
+  skill_assignments.fetch(attrs[:name], []).each do |agent_name|
+    AgentSkill.find_or_create_by!(agent: agent_map[agent_name], skill: skill)
+  end
+end
+
 # -- Harness settings --
 settings_path = Rails.root.join("harness/settings.yml")
 yaml = {
@@ -100,7 +193,8 @@ puts "  Policy:  #{org.policy&.body}"
 puts "  Budget:  #{budget.amount_cents} cents (#{budget.currency})"
 puts ""
 agents.each do |a|
-  puts "  Agent #{a.name} (#{a.token}) — daily_budget: #{a.daily_budget_cents}c"
+  skill_names = a.skills.pluck(:name).join(", ")
+  puts "  Agent #{a.name} (#{a.token}) — daily_budget: #{a.daily_budget_cents}c — skills: #{skill_names}"
 end
 puts ""
 puts "Goals: #{Goal.count}"
