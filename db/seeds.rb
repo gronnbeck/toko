@@ -54,31 +54,6 @@ agents = agents_data.map do |attrs|
   agent
 end
 
-# -- Goals --
-goals = [
-  { title: "Implement agent cost dashboard",
-    description: "Add a UI page showing per-agent spending, daily limits, and budget remaining." },
-  { title: "Add task prioritization system",
-    description: "Implement priority levels for tasks so agents work on the most important items first." }
-].map do |attrs|
-  Goal.find_or_create_by!(title: attrs[:title], organization: org) do |g|
-    g.description = attrs[:description]
-  end
-end
-
-# -- Tasks --
-[
-  { title: "Design cost dashboard wireframe", goal: goals[0] },
-  { title: "Create CostSummary service", goal: goals[0] },
-  { title: "Build dashboard Phlex view", goal: goals[0] },
-  { title: "Add priority column to tasks", goal: goals[1] },
-  { title: "Update task sorting by priority", goal: goals[1] }
-].each do |attrs|
-  Task.find_or_create_by!(title: attrs[:title]) do |t|
-    t.goal = attrs[:goal]
-  end
-end
-
 # -- Skills --
 skills_data = [
   { name: "task-decomposition", keywords: "planning breakdown scoping",
@@ -196,11 +171,6 @@ agents.each do |a|
   skill_names = a.skills.pluck(:name).join(", ")
   puts "  Agent #{a.name} (#{a.token}) — daily_budget: #{a.daily_budget_cents}c — skills: #{skill_names}"
 end
-puts ""
-puts "Goals: #{Goal.count}"
-Goal.all.each { |g| puts "  [#{g.status}] #{g.title}" }
-puts ""
-puts "Tasks: #{Task.count} (#{Task.group(:status).count.map { |s, c| "#{s}: #{c}" }.join(', ')})"
 puts ""
 puts "Wrote #{settings_path}"
 puts "Start the server, then run:  bin/harness harness/settings.yml"
