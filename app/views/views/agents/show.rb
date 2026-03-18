@@ -3,8 +3,9 @@
 module Views
   module Agents
     class Show < ApplicationView
-      def initialize(agent:)
+      def initialize(agent:, available_skills:)
         @agent = agent
+        @available_skills = available_skills
       end
 
       def view_template
@@ -16,6 +17,7 @@ module Views
           end
 
           render ::Components::AgentForm.new(agent: @agent)
+          render ::Components::AgentSkillsSection.new(agent: @agent, available_skills: @available_skills)
         end
       end
     end

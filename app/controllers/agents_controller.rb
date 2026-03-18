@@ -9,14 +9,14 @@ class AgentsController < ApplicationController
   end
 
   def show
-    render ::Views::Agents::Show.new(agent: @agent)
+    render ::Views::Agents::Show.new(agent: @agent, available_skills: available_skills)
   end
 
   def update
     if Agents::Update.call(agent: @agent, params: agent_params)
       redirect_to agent_path(@agent)
     else
-      render ::Views::Agents::Show.new(agent: @agent), status: :unprocessable_entity
+      render ::Views::Agents::Show.new(agent: @agent, available_skills: available_skills), status: :unprocessable_entity
     end
   end
 
@@ -28,5 +28,9 @@ class AgentsController < ApplicationController
 
   def agent_params
     params.require(:agent).permit(:name, :description, :mission_body)
+  end
+
+  def available_skills
+    Skill.where.not(id: @agent.skill_ids).order(:name)
   end
 end
