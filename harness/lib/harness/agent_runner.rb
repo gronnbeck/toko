@@ -29,7 +29,8 @@ module Harness
 
     def execute(task)
       # TODO: spawn the actual agent process
-      raise NotImplementedError, "agent execution not yet implemented for task #{task[:id]}"
+      warn "Agent execution not yet implemented (task #{task[:id]})"
+      nil
     end
   end
 end
