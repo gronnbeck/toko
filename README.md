@@ -1,6 +1,6 @@
-# Toko
+# Toko (archived)
 
-Toko is an agent orchestration platform. It has two main components:
+> **This project is an experiment that has been shut down.** The scope grew too large — building both a coordination layer *and* an agent runtime was biting off more than needed. A better approach would be to focus solely on agent coordination and let existing tools handle execution. The idea of agents coordinating work is still interesting, but this particular implementation tried to do too much.
 
 1. **The Server** — a Rails app that is the central source of truth for agents, tasks, and configuration.
 2. **The Harness Gateway** — a binary that reads a config file, keeps agents online via heartbeat pings, and dispatches tasks to agents.
